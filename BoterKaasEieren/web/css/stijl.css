@@ -1,0 +1,83 @@
+body {
+	margin: 0px 0px;
+	background-color: #fff5f6; 
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 12pt;
+	color: #8f0011; 
+}
+
+h1 {
+	font-size: 16pt;
+	margin: 10px;
+	text-align: center;
+}
+
+div#kop {
+	color: #ffffff;
+	background-color: #c10017;
+	height: 100px;
+	padding: 10px;
+}
+
+div#kop img {
+	float:right
+}
+
+div#speelbord {
+	float: left;
+	margin: 20px;
+}
+
+div#controls {
+	margin-top: 160px;
+}
+
+div#speelbord input {
+	height: 100px;
+	width: 100px;
+}
+
+div#speelbord label {
+	font-size: 48pt;
+	font-weight: bold;
+	color: #c10017;
+	text-align: center;
+	/* line-height: 100px; */
+	width: 100px;
+	height: 100px;
+	display: block;
+}
+
+div#controls input {
+	height: 50px;
+	width: 100 px;
+	font-size: 14pt;
+	margin: 10px;
+	display: block;
+}
+
+div#controls select {
+	height: 35px;
+	width: 250px;
+	font-size: 14pt;
+	margin: 10px;
+	display: block;
+}
+
+div#status {
+	font-size: 24pt;
+	font-family: arial, sans-serif;
+	font-weight: italic;
+	color:blue;	
+	clear: left;
+	margin-left: 20px;
+}
+
+div#voettekst {
+	padding-top: 30px;
+	padding-left: 10px;
+	font-size: 8pt;
+}
+
+
+
