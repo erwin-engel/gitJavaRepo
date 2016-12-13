@@ -11,6 +11,6 @@
     	<url-pattern>/ControllerServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>Display_BoKaEiSpel.jsp</welcome-file>
+        <welcome-file>ControllerServlet</welcome-file>
     </welcome-file-list>
 </web-app>

@@ -1,8 +1,8 @@
 <%@ page import="model.*" %>
 <%
     BoterKaasEierenSpel boKaEiSpel = (BoterKaasEierenSpel) session.getAttribute("boKaEiSpel");
-    Cookie scoreCookie = (Cookie) session.getAttribute("userScoreCookie");
-    int score = Integer.parseInt(scoreCookie.getValue());
+    int userScore = (Integer) session.getAttribute("userScore");
+    int autoScore = (Integer) session.getAttribute("autoScore");
 %>
 <html>
     <head>
@@ -20,25 +20,25 @@
             <table cellspacing="5" cellpadding="5" border="1">
                 <% for (int i = 0; i < 3; i++) { %>
                 <tr>
-                    <%  int indexUp = 0;
+                    <%  int addToRowIndex = 0;
                         if (i == 1) {
-                            indexUp = 2;
+                            addToRowIndex = 2;
                         }
                         if (i == 2) {
-                            indexUp = 4;
+                            addToRowIndex = 4;
                         }
                         for (int j = 0; j < 3; j++) {
                             if (boKaEiSpel.getMarkering(i + j + 
-                                indexUp) == Markering.KRUIS) { %>
+                               addToRowIndex) == Markering.KRUIS) { %>
                     <td><label>X</label></td>
                     <% } else if (boKaEiSpel.getMarkering(i + j + 
-                            indexUp) == Markering.NUL) {  %>
+                            addToRowIndex) == Markering.NUL) {  %>
                     <td><label>O</label></td>
                     <% } else {%>
                     <td>
                         <form action="<%= response.encodeURL("ControllerServlet")%>" method="post">
                             <input type="hidden" name="bron" value="bo_ka_ei">
-                            <input type="hidden" name="spelerZetIndex" value="<%= i + j + indexUp%>">                     
+                            <input type="hidden" name="spelerZetIndex" value="<%= i + j + addToRowIndex%>">                     
                             <input type="submit" 
                                    <% if (boKaEiSpel.getStatus() == Status.BEZIG) { %>
                                    value="kies">
@@ -54,7 +54,8 @@
             </table>
         </div>
         <div id="controls">
-            <p>score = <%= score%> </p>       
+            <p>speler score = <%= userScore%> </p> 
+            <p>computer score = <%= autoScore%> </p>
         </div>
         <div id="controls">
             <form action="<%= response.encodeURL("ControllerServlet")%>" method="get"> 
