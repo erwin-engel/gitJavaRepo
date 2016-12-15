@@ -29,7 +29,7 @@ div#speelbord {
 }
 
 div#controls {
-	margin-top: 70px;
+	margin-top: 15px;
 }
 
 div#speelbord input {
@@ -77,6 +77,11 @@ div#voettekst {
 	padding-top: 30px;
 	padding-left: 10px;
 	font-size: 8pt;
+}
+
+div#kleinetekst {
+	font-size: 8pt;
+        margin-top: 30px;
 }
 
 

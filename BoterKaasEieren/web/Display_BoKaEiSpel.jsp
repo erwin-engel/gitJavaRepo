@@ -18,48 +18,56 @@
         </div>
         <div id="speelbord">
             <table cellspacing="5" cellpadding="5" border="1">
-                <% for (int i = 0; i < 3; i++) { %>
-                <tr>
-                    <%  int addToRowIndex = 0;
-                        if (i == 1) {
-                            addToRowIndex = 2;
-                        }
-                        if (i == 2) {
-                            addToRowIndex = 4;
-                        }
-                        for (int j = 0; j < 3; j++) {
-                            if (boKaEiSpel.getMarkering(i + j + 
-                               addToRowIndex) == Markering.KRUIS) { %>
-                    <td><label>X</label></td>
-                    <% } else if (boKaEiSpel.getMarkering(i + j + 
-                            addToRowIndex) == Markering.NUL) {  %>
-                    <td><label>O</label></td>
-                    <% } else {%>
-                    <td>
-                        <form action="<%= response.encodeURL("ControllerServlet")%>" method="post">
-                            <input type="hidden" name="bron" value="bo_ka_ei">
-                            <input type="hidden" name="spelerZetIndex" value="<%= i + j + addToRowIndex%>">                     
-                            <input type="submit" 
-                                   <% if (boKaEiSpel.getStatus() == Status.BEZIG) { %>
-                                   value="kies">
-                            <% } else { %>
-                            value="">
-                            <% } %>
-                        </form>
-                    </td>
-                    <% } %>
-                    <% } %>
-                </tr>
+            <% for (int i = 0; i < 3; i++) { %>
+            <tr>
+                <%  int indexUp = 0;
+                    if (i == 1) {
+                        indexUp = 2;
+                    }
+                    if (i == 2) {
+                        indexUp = 4;
+                    }
+                    for (int j = 0; j < 3; j++) {
+                        if (boKaEiSpel.getMarkering(i + j
+                                + indexUp) == Markering.KRUIS) { %>
+                <td><label>X</label></td>
+                <% } else if (boKaEiSpel.getMarkering(i + j
+                        + indexUp) == Markering.NUL) {  %>
+                <td><label>O</label></td>
+                <% } else {%>
+                <td>
+                    <form action="<%= response.encodeURL("ControllerServlet")%>" method="post">
+                        <input type="hidden" name="bron" value="bo_ka_ei">
+                        <input type="hidden" name="spelerZetIndex" value="<%= i + j + indexUp%>">                     
+                        <input type="submit" 
+                               <% if (boKaEiSpel.getStatus() == Status.BEZIG) { %>
+                               value="kies">
+                        <% } else { %>
+                        value="">
+                        <% } %>
+                    </form>
+                </td>
                 <% } %>
+                <% } %>
+            </tr>
+            <% }%>
             </table>
         </div>
+            <div id="kleinetekst">
+                (voor bijhouden scores moet cookies aan staan)
+            </div>   
         <div id="controls">
-            <p>speler score = <%= userScore%> </p> 
-            <p>computer score = <%= autoScore%> </p>
+            <p>speler score = <%= userScore%> </p>
+            <p>computer score = <%= autoScore%> 
+            </p> 
+            <form action="<%= response.encodeURL("ControllerServlet")%>" method="post"> 
+                <input type="hidden" name="bron" value="bo_ka_ei_reset_score"><br>
+                <p><input type="submit" value="Reset scores"></p>
+            </form> 
         </div>
         <div id="controls">
             <form action="<%= response.encodeURL("ControllerServlet")%>" method="get"> 
-                Selecteer een speelwijze:<br>
+                Selecteer een speelwijze bij nieuw spel:<br>
                 <select name="slim">
                     <option value="true" 
                             <% if (boKaEiSpel.isBedenkSlim()) { %> 

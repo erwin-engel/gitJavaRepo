@@ -11,33 +11,29 @@ import javax.servlet.http.HttpSession;
 import model.*;
 
 /**
- * Verantwoordelijkheden van ControllerServlet: - nieuw Spel object aanmaken bij
- * eerste aanroep - keuzes van gebruiker na starten spel doorgeven aan Spel
- * object - benodigde informatie voor view in HTTP-request zetten
+ * Verantwoordelijkheden van ControllerServlet:
+ * - nieuw Spel object aanmaken bij eerste eerste aanroep 
+ * - keuzes van gebruiker na starten spel doorgeven aan Spel
+ * - resultaten spel doorgeven aan view (via sessie object)
+ * - inlezen en verwerken scores uit persistant cookies
+ * - reset scores in persistant cookies afhandelen
+ * 
+ * @author erwin
  */
 public class ControllerServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    /**
-     * Uitvoeren bij het starten van de servlet (als server wordt gestart).
-     */
-    public void init() throws ServletException {
-        // deze methode wordt nog niet gebruikt
-    }
 
     /**
-     * Uitvoeren bij het starten van de servlet (als server wordt gestart)
-     */
-    public void destroy() {
-        // deze methode wordt nog niet gebruikt
-    }
-
-    /**
+     * Deze methode verwerkt HTTP doGet request.
+     * 
      * De web.xml welcome-file-list zorgt ervoor dat de eerste aanroep door
-     * gebruiker bij de ControllerServlet terecht komt via een HTTP get-request
-     *
-     * Keuze 'nieuw spel' na eerste aanroep komt terecht bij de
-     * ControllerServlet via een HTTP get-request.
+     * de doGet methode wordt afgehandelt
+     * Het starten van een nieuw spel  wordt ook door de doGetMethode afgehandelt
+     * @param request vanaf browser
+     * @param response naar browser
+     * @throws ServletException
+     * @throws IOException 
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -49,7 +45,7 @@ public class ControllerServlet extends HttpServlet {
         String url = "/Display_BoKaEiSpel.jsp";
         // als de parameter "bron" niet aanwezig is dan is de bron van de 
         // aanroep de web.xml file. (welcome-file-list: aller eerste aanroep 
-        // door user)
+        // door gebruiker)
         if (bron == null) {
             bron = "webXmlBo-Ka-Ei";
         }
@@ -57,8 +53,6 @@ public class ControllerServlet extends HttpServlet {
             case "webXmlBo-Ka-Ei":
                 boKaEiSpel.setBedenkSlim(true);
                 session.setAttribute("boKaEiSpel", boKaEiSpel);
-                // zet score cookies in request object en values van score cookies 
-                // in sessie object
                 processScoreCookiesDoGet(scoreCookies, session, response);
                 break;
             case "bo_ka_ei":
@@ -67,8 +61,6 @@ public class ControllerServlet extends HttpServlet {
                 } else {
                     boKaEiSpel.setBedenkSlim(false);
                 }
-                // zet score cookies in request object en values van score cookies 
-                // in sessie object
                  processScoreCookiesDoGet(scoreCookies, session, response);
                 session.setAttribute("boKaEiSpel", boKaEiSpel);
                 break;
@@ -80,10 +72,15 @@ public class ControllerServlet extends HttpServlet {
                 = getServletContext().getRequestDispatcher(url);
         dispatcher.forward(request, response);
     }
- 
+
     /**
-     * zet cookies die via request object ontvangen zijn (via doGet methode) in
-     * response object en in sessie object
+     * Deze methode verwerkt de score cookies die door doGet methode ontvangen
+     * zijn. Score cookies worden in response gezet en inhoud score cookies 
+     * wordt in sessie opgenomen
+     * 
+     * @param scoreCookies (user- en auto score cookies)
+     * @param session
+     * @param response 
      */
     private void processScoreCookiesDoGet (Cookie[] scoreCookies, 
             HttpSession session, HttpServletResponse response) {
@@ -101,10 +98,20 @@ public class ControllerServlet extends HttpServlet {
             }
         }        
     }
-    
     /**
-     * doPost wordt verwerkt als de gebruiker een zet heeft gedaan (er wordt dan
-     * een formulier aangeboden)
+     * Deze methode verwerkt HTTP doPost request
+     *
+     * taken:
+     * - zet van gebruiker doorgeven aan Spel en resultaten in sessie opnemen
+     * - score cookies reset n.a.v. keuze gebruiker
+     * - score cookies bijwerken m.b.v. status Spel
+     * - scores uit cookies in sessie opnemen
+     * - score cookies in response opnemen
+     * 
+     * @param request vanaf browser
+     * @param response naar browser
+     * @throws ServletException
+     * @throws IOException 
      */
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -113,17 +120,21 @@ public class ControllerServlet extends HttpServlet {
         BoterKaasEierenSpel boKaEiSpel = (BoterKaasEierenSpel) 
             session.getAttribute("boKaEiSpel");
         Cookie[] scoreCookies = getScoreCookies(request);
-        int spelerZetIndex = Integer.parseInt(request.getParameter("spelerZetIndex"));
+
         String url = "/Display_BoKaEiSpel.jsp";
         String bron = request.getParameter("bron");
         switch (bron) {
             case "bo_ka_ei":
+                int spelerZetIndex = Integer.parseInt(request.getParameter("spelerZetIndex"));  
                 boKaEiSpel.verwerkZet(Markering.KRUIS, spelerZetIndex);
                 boKaEiSpel.verwerkZet(Markering.NUL, 
                         boKaEiSpel.bedenkZet(Markering.NUL));
                 processScoreCookiesDoPost(scoreCookies, session, response, 
                         boKaEiSpel);
                 session.setAttribute("boKaEiSpel", boKaEiSpel);
+                break;
+            case "bo_ka_ei_reset_score":
+                resetScoreCookies(scoreCookies, session, response);    
                 break;
             default:
                 url = "/unknown_bron.jsp";
@@ -134,9 +145,14 @@ public class ControllerServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
     /**
-     * Zet de spelresultaten in de cookies die via request object ontvangen zijn
-     * (via doPost methode) en zet deze cookies daarna in response object en in
-     * sessie object. 
+     * Deze methode verwerkt de score cookies die door doPost methode ontvangen
+     * zijn. 
+     * - Score cookies worden bijgewerkt met spel resultaten. 
+     * - Nieuwe inhoud score cookies wordt in sessie opgenomen.
+     * @param scoreCookies (user- en auto score cookies)
+     * @param session
+     * @param response
+     * @param boKaEiSpel 
      */
     private void processScoreCookiesDoPost (Cookie[] scoreCookies, 
             HttpSession session, HttpServletResponse response, 
@@ -166,8 +182,32 @@ public class ControllerServlet extends HttpServlet {
         }  
     }
     /**
-     * Haal de score cookies op uit het request. Als deze er niet zijn maak dan 
-     * worden er nieuwe cookies gemaakt
+     * Deze methode doet een reset de scores.
+     * 
+     * @param scoreCookies (user- en auto score cookies)
+     * @param session
+     * @param response 
+     */
+    private void resetScoreCookies (Cookie[] scoreCookies, 
+            HttpSession session, HttpServletResponse response) {
+        for (int i = 0; i < scoreCookies.length; i++) {
+            scoreCookies[i].setMaxAge(0);
+            scoreCookies[i].setPath("/");
+            response.addCookie(scoreCookies[i]);
+            if (scoreCookies[i].getName().equals("userScoreCookie")){
+                session.setAttribute("userScore", 0);
+            }
+            if (scoreCookies[i].getName().equals("autoScoreCookie")){
+                session.setAttribute("autoScore", 0);
+            }
+        }        
+    }
+    /**
+     * Deze methode haalt de score cookies op uit het request. 
+     * Als deze er niet zijn maak dan worden er nieuwe score cookies gemaakt
+     * 
+     * @param request (van zowel doGet als doPost)
+     * @return 
      */
     private Cookie[] getScoreCookies(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -176,7 +216,6 @@ public class ControllerServlet extends HttpServlet {
         String autoScoreCookieName = "autoScoreCookie";
         String autoScoreCookieValue = "";
         if (cookies != null) {
-            // cookies aanwezig
             for (int i = 0; i < cookies.length; i++) {
                 Cookie cookie = cookies[i];
                 if (userScoreCookieName.equals(cookie.getName()))  {
