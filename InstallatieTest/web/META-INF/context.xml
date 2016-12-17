@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/InstallatieTest">
+  <!-- the music database that contains the Music Store data -->
+  <Resource name="jdbc/ITest" type="javax.sql.DataSource" auth="Container" 
+            driverClassName="com.mysql.jdbc.Driver" 
+            url="jdbc:mysql://localhost:3306/webappstest?autoReconnect=true" 
+            username="root" password="Mysql@6973" 
+            logAbandoned="true" 
+            removeAbandoned="true" removeAbandonedTimeout="60" 
+            maxActive="100" maxIdle="30" maxWait="10000" />
+
+</Context>
