@@ -15,13 +15,13 @@
     <td><textarea name="koptekst" rows="6" cols="50"></textarea></td>
   </tr>
   <tr>
-    <td><input type="submit" value="Maak enquete"></td>
+    <td><input type="submit" value="Maak nieuwe evalutatie"></td>
   </tr>
 </table>
 </form>
 
 <div id="voettekst">
-<p>Open Universiteit 2009</p>
+<p><%@ include file="includes/voettekst.jsp"%></p>
 </div>
 </body>
 </html>

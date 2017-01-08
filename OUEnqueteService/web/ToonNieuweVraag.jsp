@@ -76,7 +76,7 @@ Als een vraag verkeerd is ingevoerd, wordt de vorige invoer getoond.
 </form>
 
 <div id="voettekst">
-<p>Open Universiteit 2009</p>
+<p><%@ include file="includes/voettekst.jsp"%></p>
 </div>
 </body>
 </html>

@@ -5,15 +5,26 @@
         <%@ include file="includes/kop.jsp"%>
         <c:if test="${bron.equals('verzendvraag')}">
             <p id="melding">
-                Uw enquete is opgeslagen onder nummer ${enquete.getEnquetenr() }.<br>
-                Onthoud dit nummer goed; u heeft het nodig om uw enquete naar de
-                doelgroep te versturen en om later de resultaten te bekijken.
+                De evaluatie is opgeslagen onder nummer ${enquete.getEnquetenr() }.<br>
+                
+                De nu volgende link kan naar de cursisten gestuurd worden zodat zij
+                de evaluatie kunnen invullen:<br>
+                <br>
+                    "http://localhost:8080/OUEnqueteservice/ControllerServlet?bron=invullenenquete&enquetenr=${enquete.getEnquetenr()}"<br>
+                <br>
             </p>
         </c:if> 
         <h1 id="titel">${enquete.getTitel()}</h1>
         <p id="koptekstEnquete">${enquete.getKoptekst()}</p>
-        <p></p><p></p>
-        <form action="<c:url value='/ControllerServlet' />" method="get">
+        <form action="<c:url value='/ControllerServlet'/>" 
+              <c:choose>
+                  <c:when test="${bron.equals('verzendvraag')}">  
+                     method="post"
+                  </c:when>
+                  <c:when test="${bron.equals('invullenenquete')}">  
+                     method="get"
+                  </c:when>  
+              </c:choose> >    
             <c:forEach var="vraag" items="${enquete.getVragenlijst()}"> 
                 <p>${vraag.getVraagnummer()} ${vraag.getTekst()}</p>
                 <div class="antwoorden">       
@@ -42,8 +53,13 @@
                 <input type="submit" value="versturen">
             </c:if>
         </form>
+        <c:if test="${bron.equals('verzendvraag')}">
+            <form action="ToonNieuweEnquete.jsp" method="get">
+                <input type="submit" value="maak volgende nieuwe evaluatie">
+            </form>
+        </c:if>
         <div id="voettekst">
-            <p>Open Universiteit 2009</p>
+            <p><%@ include file="includes/voettekst.jsp"%></p>
         </div>
     </body>
 </html>

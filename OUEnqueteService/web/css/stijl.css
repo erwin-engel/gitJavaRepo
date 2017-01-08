@@ -1,9 +1,9 @@
 body {
 	margin: 10px 10px;
-	background-color: #fff5f6; 
+	background-color: #ffffff; 
 	font-family: Arial, Helvetica, Verdana, sans-serif;
 	font-size: 12pt;
-	color: #8f0011; 
+	color: #003366; 
 }
 
 h1 {
@@ -35,13 +35,13 @@ p#koptekstEnquete {
 }
 
 p#melding {
-	color: blue;
+	color: #b75b00;
 	font-weight: bold;
 }
 
 div#kop {
 	color: #ffffff;
-	background-color: #c10017;
+	background-color: #174d82;
 	height: 100px;
 	padding: 10px;
 }

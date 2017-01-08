@@ -10,8 +10,7 @@ uitgevoerd. Ten behoeve van het systeembeheer volgen hier enkele details.
 <p>
 Bron = <%= request.getParameter("bron") %><br>
 Method = <%= request.getMethod() %><br>
-Ingelogd = <%= session.getAttribute("ingelogd") %>
 </p>
-<%@ include file="includes/voettekst.html" %>
+<p><%@ include file="includes/voettekst.jsp"%></p>
 </body>
 </html>
